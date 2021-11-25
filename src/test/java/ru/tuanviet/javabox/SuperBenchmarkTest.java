@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -16,18 +18,32 @@ public class SuperBenchmarkTest {
 
 
     @Test
-    public void shouldCreateSuperBenchmark() {
+    public void shouldRepeatMethodOneOrMoreTimesInTestClass1() throws NoSuchMethodException {
         Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
         sutSB.benchmark(testList);
-        assertThat(sutSB.toString()).isEqualTo("1, 2");
+
+        Annotation annotation = TestClass1.class
+                .getDeclaredMethod("shouldMultiply100TimesIn50Millis")
+                .getAnnotation(Benchmark.class);
+
+            Benchmark benchmark = (Benchmark) annotation;
+            assertThat(benchmark.repeats()).isGreaterThan(0);
 
     }
 
     @Test
-    public void shouldPrintAllNamesOfClassesInArray(){
-        Class<?>[] testList = new Class[]{TestClass1.class, null, TestClass2.class};
+    public void shouldRepeatMethodInAnnotationDefault10TimesInTestClass2() throws NoSuchMethodException {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
         sutSB.benchmark(testList);
-        assertThat(sutSB.toString()).isEqualTo("ru.tuanviet.javabox.TestClass1, ru.tuanviet.javabox.TestClass2");
+
+        Annotation annotation = TestClass2.class
+                .getDeclaredMethod("should_multiply_10_times_in_1000_millis")
+                .getAnnotation(Benchmark.class);
+
+        Benchmark benchmark = (Benchmark) annotation;
+        assertThat(benchmark.repeats()).isGreaterThan(0);
     }
 
 }

@@ -1,12 +1,20 @@
 package ru.tuanviet.javabox;
 
+import java.util.ArrayList;
+
 public class TestClass1 {
 
 
-    @Benchmark(repeats = 10000, timeout = 5)
-    public void should_substract_100_times_in_10000_millis() {
-        for (int i = 230000; i > 1; i--) {
-            App.multiply(i, i+1);
+    @Benchmark(repeats = 100, timeout = 50)
+    public void shouldMultiply100TimesIn50Millis() {
+
+        ArrayList<Long> testList = new ArrayList<Long>();
+        for (long i = 10000; i <= 50000; i++) {
+            testList.add(i*i);
+        }
+
+        for (int i = 1; i < testList.size(); i++) {
+            App.multiply(testList.get(i), testList.get(i-1));
 
         }
     }

@@ -20,7 +20,7 @@ public class SuperBenchmark {
         StringBuilder resultBuilder = new StringBuilder();
 
         if ( classes == null || classes.length == 0 ) {
-            throw new IllegalArgumentException("list should not be empty");
+            throw new IllegalArgumentException("list should not be empty or null");
         }
 
         createHeaderWithLocalDateTime(resultBuilder);
@@ -61,6 +61,11 @@ public class SuperBenchmark {
     }
 
     private void benchmarkMethodsResultBuilder(StringBuilder resultBuilder, Class<?> clazz, Method method, Benchmark benchmark) {
+        if (benchmark.repeats() == 0){
+            System.out.println(resultBuilder);
+            throw new IllegalArgumentException("Benchmark repeats should be greater than 0");
+        }
+
         long methodRepeats = 0;
         long maxMethodRepeats = benchmark.repeats();
         String testStatus = "PASSED";

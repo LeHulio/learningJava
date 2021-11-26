@@ -19,12 +19,11 @@ public class SuperBenchmarkTest {
 
         sutSB.benchmark(testList);
 
-        Annotation annotation = TestClass1.class
+        Benchmark annotation = TestClass1.class
                 .getDeclaredMethod("shouldMultiply100TimesIn50Millis")
                 .getAnnotation(Benchmark.class);
 
-        Benchmark benchmark = (Benchmark) annotation;
-        assertThat(benchmark.repeats()).isEqualTo(100);
+        assertThat(annotation.repeats()).isEqualTo(100);
 
     }
 
@@ -108,6 +107,12 @@ public class SuperBenchmarkTest {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfRepeats0InTestClass3() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class, TestClass3.class};
 
+        sutSB.benchmark(testList);
+
+    }
 
 }

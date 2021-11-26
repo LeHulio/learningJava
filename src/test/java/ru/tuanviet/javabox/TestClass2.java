@@ -5,7 +5,7 @@ public class TestClass2 {
     @Benchmark
     public void should_multiply_10_times_in_1000_millis() {
         for (int i = 540000; i > 1; i--) {
-            App.multiply(i, i+1);
+            App.multiply(i, i + 1);
 
         }
     }

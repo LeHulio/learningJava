@@ -3,14 +3,19 @@ package ru.tuanviet.javabox;
 import java.util.ArrayList;
 
 class AnnotatedMethodCalledStatistics {
-    private String status;
-    private long methodRepeats;
-    private double averageTime;
-    private double maxTime;
-    private long maxMethodRepeats;
-    private ArrayList<Double> diffTimeCollection;
+    private final String status;
+    private final long methodRepeats;
+    private final double averageTime;
+    private final double maxTime;
+    private final long maxMethodRepeats;
+    private final ArrayList<Double> diffTimeCollection;
 
-    AnnotatedMethodCalledStatistics(String status, long methodRepeats, double averageTime, double maxTime, long maxMethodRepeats, ArrayList<Double> diffTimeCollection) {
+    AnnotatedMethodCalledStatistics(String status,
+                                    long methodRepeats,
+                                    double averageTime,
+                                    double maxTime,
+                                    long maxMethodRepeats,
+                                    ArrayList<Double> diffTimeCollection) {
         this.status = status;
         this.methodRepeats = methodRepeats;
         this.averageTime = averageTime;

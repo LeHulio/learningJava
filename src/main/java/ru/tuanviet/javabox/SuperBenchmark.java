@@ -61,7 +61,7 @@ public class SuperBenchmark {
     }
 
     private void benchmarkMethodsResultBuilder(StringBuilder resultBuilder, Class<?> clazz, Method method, Benchmark benchmark) {
-        if (benchmark.repeats() == 0){
+        if ( benchmark.repeats() == 0 ) {
             System.out.println(resultBuilder);
             throw new IllegalArgumentException("Benchmark repeats should be greater than 0");
         }

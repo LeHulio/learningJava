@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Benchmark {
     public long repeats() default 10L;
+
     public long timeout() default 1000L;
 
 }

@@ -2,7 +2,6 @@ package ru.tuanviet.javabox;
 
 import org.junit.Test;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +19,7 @@ public class SuperBenchmarkTest {
         sutSB.benchmark(testList);
 
         Benchmark annotation = TestClass1.class
-                .getDeclaredMethod("shouldMultiply100TimesIn50Millis")
+                .getDeclaredMethod("shouldMultiply_100Times_In50Millis")
                 .getAnnotation(Benchmark.class);
 
         assertThat(annotation.repeats()).isEqualTo(100);
@@ -92,7 +91,7 @@ public class SuperBenchmarkTest {
         }
 
         long methodRepeats = sutSB.getCalledStatisticsArrayList().get(1).getMethodRepeats();
-        Double testAverage = sum/methodRepeats;
+        Double testAverage = sum / methodRepeats;
 
         assertThat(sutSB.getCalledStatisticsArrayList().get(1).getAverageTime()).isEqualTo(testAverage);
     }

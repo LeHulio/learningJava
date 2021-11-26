@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class TestClass1 {
 
 
-    @Benchmark(repeats = 100, timeout = 50)
+    @Benchmark(repeats = 100, timeout = 5)
     public void shouldMultiply100TimesIn50Millis() {
 
         ArrayList<Long> testList = new ArrayList<Long>();

@@ -12,8 +12,8 @@ import java.util.UUID;
 
 public class SuperBenchmark {
     private String result;
-//    private ArrayList<Long> timeoutsInAllMethods;
-//    private ArrayList<Long> repeatsInAllMethods;
+
+    private ArrayList<AnnotatedMethodCalledStatistics> calledStatisticsArrayList = new ArrayList<>();
 
     @Benchmark(repeats = 1, timeout = 1000)
     public void benchmark(Class<?>[] classes) {
@@ -64,13 +64,13 @@ public class SuperBenchmark {
         long methodRepeats = 0;
         long maxMethodRepeats = benchmark.repeats();
         String testStatus = "PASSED";
-        ArrayList<Long> diffTimeCollection = new ArrayList<>();
+        ArrayList<Double> diffTimeCollection = new ArrayList<>();
         try {
             for (int i = 0; i < benchmark.repeats(); i++) {
                 LocalDateTime startTime = LocalDateTime.now();
                 method.invoke(clazz.getDeclaredConstructor().newInstance());
                 LocalDateTime endTime = LocalDateTime.now();
-                long diffTimeMillis = ChronoUnit.MILLIS.between(startTime, endTime);
+                double diffTimeMillis = ChronoUnit.MILLIS.between(startTime, endTime);
                 diffTimeCollection.add(diffTimeMillis);
 
                 methodRepeats++;
@@ -82,18 +82,22 @@ public class SuperBenchmark {
                 }
             }
             Collections.sort(diffTimeCollection);
+
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
 
-        long minTime = diffTimeCollection.get(0);
-        long maxTime = diffTimeCollection.get(diffTimeCollection.size() - 1);
+        double minTime = diffTimeCollection.get(0);
+        double maxTime = diffTimeCollection.get(diffTimeCollection.size() - 1);
         double averageTime = diffTimeCollection.stream()
                 .mapToDouble(a -> a)
                 .average().getAsDouble();
         String nameID = UUID.randomUUID().toString();
-
         String methodName = getFormattedStringFromCamelAndSnakeCase(method);
+
+        AnnotatedMethodCalledStatistics statistics = new AnnotatedMethodCalledStatistics(testStatus,
+                methodRepeats, averageTime, maxTime, maxMethodRepeats, diffTimeCollection);
+        calledStatisticsArrayList.add(statistics);
 
         resultBuilder.append("[Test ").append(nameID).append(" ").append(testStatus).append("]\n")
                 .append(methodName)
@@ -124,5 +128,9 @@ public class SuperBenchmark {
     @Override
     public String toString() {
         return result;
+    }
+
+    public ArrayList<AnnotatedMethodCalledStatistics> getCalledStatisticsArrayList() {
+        return calledStatisticsArrayList;
     }
 }

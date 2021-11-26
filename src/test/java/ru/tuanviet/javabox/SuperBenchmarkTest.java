@@ -1,14 +1,10 @@
 package ru.tuanviet.javabox;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -27,8 +23,8 @@ public class SuperBenchmarkTest {
                 .getDeclaredMethod("shouldMultiply100TimesIn50Millis")
                 .getAnnotation(Benchmark.class);
 
-            Benchmark benchmark = (Benchmark) annotation;
-            assertThat(benchmark.repeats()).isGreaterThan(0);
+        Benchmark benchmark = (Benchmark) annotation;
+        assertThat(benchmark.repeats()).isEqualTo(100);
 
     }
 
@@ -38,12 +34,80 @@ public class SuperBenchmarkTest {
 
         sutSB.benchmark(testList);
 
-        Annotation annotation = TestClass2.class
-                .getDeclaredMethod("should_multiply_10_times_in_1000_millis")
-                .getAnnotation(Benchmark.class);
-
-        Benchmark benchmark = (Benchmark) annotation;
-        assertThat(benchmark.repeats()).isGreaterThan(0);
+        assertThat(sutSB.getCalledStatisticsArrayList().get(1).getAnnotatedMethodRepeats()).isEqualTo(10);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentException() {
+        sutSB.benchmark(null);
+    }
+
+    @Test
+    public void shouldCheckTestStatusInStatisticsWithStatusPassed() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(1).getStatus()).isEqualTo("PASSED");
+
+    }
+
+    @Test
+    public void shouldCheckTestStatusInStatisticsWithStatusFailed() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(0).getStatus()).isEqualTo("FAILED");
+
+    }
+
+    @Test
+    public void shouldCheckTestRepeatsInStatisticsAtLeastOneTime() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(0).getMethodRepeats()).isGreaterThan(0);
+
+    }
+
+    @Test
+    public void shouldCheckTestAllRepeatsInStatistics() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(1).getMethodRepeats()).isEqualTo(10);
+    }
+
+    @Test
+    public void shouldCheckTestAverageTimeInStatistics() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+        Double sum = 0d;
+        ArrayList<Double> testCollection = sutSB.getCalledStatisticsArrayList().get(1).getDiffTimeCollection();
+        for (Double diffTime : testCollection) {
+            sum += diffTime;
+        }
+
+        long methodRepeats = sutSB.getCalledStatisticsArrayList().get(1).getMethodRepeats();
+        Double testAverage = sum/methodRepeats;
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(1).getAverageTime()).isEqualTo(testAverage);
+    }
+
+    @Test
+    public void shouldCheckTestMaxTimeInStatisticsEqualsAverageAndMinInTestClass1() {
+        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+
+        sutSB.benchmark(testList);
+
+        assertThat(sutSB.getCalledStatisticsArrayList().get(0).getAverageTime()).isEqualTo(sutSB.getCalledStatisticsArrayList().get(0).getMaxTime());
+
+    }
+
+
 
 }

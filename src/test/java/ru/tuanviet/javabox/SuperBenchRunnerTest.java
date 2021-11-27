@@ -1,31 +1,27 @@
 package ru.tuanviet.javabox;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(SuperBenchRunner.class)
 public class SuperBenchRunnerTest {
     TestClass5 sutClass5 = new TestClass5();
 
     @Test
+    @Benchmark
     public void shouldRepeatMethod100000Times() throws NoSuchMethodException {
-
-        Benchmark benchmark = TestClass5.class.getDeclaredMethod("multiply", Integer.TYPE, Integer.TYPE)
-                .getAnnotation(Benchmark.class);
-
-        ArrayList<Long> collection = new ArrayList<>();
-        for (int i = 0; i < benchmark.repeats(); i++) {
-            collection.add(sutClass5.multiply(1, 1));
-        }
-        assertThat(collection.size()).isEqualTo(100000);
+        assertThat(sutClass5.multiply(3, 7)).isEqualTo(21);
     }
 
     @Test
+    @Benchmark
     public void shouldCheckMultiplyResult() {
+        //System.out.println("1");
         assertThat(sutClass5.multiply(5, 2)).isEqualTo(10);
-
     }
 
 }

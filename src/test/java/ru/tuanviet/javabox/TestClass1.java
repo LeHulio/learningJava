@@ -1,12 +1,15 @@
 package ru.tuanviet.javabox;
 
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 
+@RunWith(SuperBenchRunner.class)
 public class TestClass1 {
 
 
     @Benchmark(repeats = 100, timeout = 0)
-    public void shouldMultiply_100Times_In50Millis() {
+    public void shouldMultiply100TimesIn50Millis() {
 
         ArrayList<Long> testList = new ArrayList<>();
         for (long i = 10000; i <= 50000; i++) {

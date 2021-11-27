@@ -5,12 +5,12 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class SuperBenchmark {
+    private final double percentile75 = 75d;
+    private final double percentile95 = 95d;
+    private final double percentile99 = 99d;
     private String result;
 
     private ArrayList<AnnotatedMethodCalledStatistics> calledStatisticsArrayList = new ArrayList<>();
@@ -97,6 +97,12 @@ public class SuperBenchmark {
         double averageTime = diffTimeCollection.stream()
                 .mapToDouble(a -> a)
                 .average().getAsDouble();
+
+
+        double resultFor75 = percentile(diffTimeCollection, percentile75);
+        double resultFor95 = percentile(diffTimeCollection, percentile95);
+        double resultFor99 = percentile(diffTimeCollection, percentile99);
+
         String nameID = UUID.randomUUID().toString();
         String methodName = getFormattedStringFromCamelAndSnakeCase(method);
 
@@ -111,7 +117,10 @@ public class SuperBenchmark {
                 .append("Timeout: ").append(benchmark.timeout()).append("ms").append("\n")
                 .append("Min: ").append(minTime).append("ms\n")
                 .append("Avg: ").append(averageTime).append("ms\n")
-                .append("Max: ").append(maxTime).append("ms\n").append("\n");
+                .append("Max: ").append(maxTime).append("ms\n")
+                .append("Percentile 75: ").append(resultFor75).append("\n")
+                .append("Percentile 95: ").append(resultFor95).append("\n")
+                .append("Percentile 99: ").append(resultFor99).append("\n").append("\n");
 
     }
 
@@ -128,6 +137,11 @@ public class SuperBenchmark {
                 + methodName.substring(2, 3).toUpperCase(Locale.ROOT)
                 + methodName.substring(3);
         return methodName;
+    }
+
+    private double percentile(List<Double> latencies, double percentile) {
+        int index = (int) Math.ceil(percentile / 100.0 * latencies.size());
+        return latencies.get(index - 1);
     }
 
     @Override

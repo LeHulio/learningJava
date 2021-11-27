@@ -19,7 +19,7 @@ public class SuperBenchmarkTest {
         sutSB.benchmark(testList);
 
         Benchmark annotation = TestClass1.class
-                .getDeclaredMethod("shouldMultiply_100Times_In50Millis")
+                .getDeclaredMethod("shouldMultiply100TimesIn50Millis")
                 .getAnnotation(Benchmark.class);
 
         assertThat(annotation.repeats()).isEqualTo(100);
@@ -80,20 +80,20 @@ public class SuperBenchmarkTest {
     }
 
     @Test
-    public void shouldCheckTestAverageTimeInStatistics() {
-        Class<?>[] testList = new Class[]{TestClass1.class, TestClass2.class};
+    public void shouldCheckTestAverageTimeInStatisticsInTestClass4() {
+        Class<?>[] testList = new Class[]{TestClass4.class};
 
         sutSB.benchmark(testList);
         Double sum = 0d;
-        ArrayList<Double> testCollection = sutSB.getCalledStatisticsArrayList().get(1).getDiffTimeCollection();
+        ArrayList<Double> testCollection = sutSB.getCalledStatisticsArrayList().get(0).getDiffTimeCollection();
         for (Double diffTime : testCollection) {
             sum += diffTime;
         }
 
-        long methodRepeats = sutSB.getCalledStatisticsArrayList().get(1).getMethodRepeats();
+        long methodRepeats = sutSB.getCalledStatisticsArrayList().get(0).getMethodRepeats();
         Double testAverage = sum / methodRepeats;
 
-        assertThat(sutSB.getCalledStatisticsArrayList().get(1).getAverageTime()).isEqualTo(testAverage);
+        assertThat(sutSB.getCalledStatisticsArrayList().get(0).getAverageTime()).isEqualTo(testAverage);
     }
 
     @Test
@@ -113,5 +113,6 @@ public class SuperBenchmarkTest {
         sutSB.benchmark(testList);
 
     }
+
 
 }

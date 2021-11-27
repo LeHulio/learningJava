@@ -1,7 +1,6 @@
 package ru.tuanviet.javabox;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class SuperBenchRunnerTest {
     }
 
     @Test
-    public void shouldCheckMultiplyResult(){
+    public void shouldCheckMultiplyResult() {
         assertThat(sutClass5.multiply(5, 2)).isEqualTo(10);
 
     }

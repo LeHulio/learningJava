@@ -1,27 +1,50 @@
 package ru.tuanviet.javabox;
 
 
+import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 
 public class SuperBenchRunner extends Runner {
 
     private final Class<?> testClass;
+    private final HashMap<Method, Description> methodDescriptions;
 
     public SuperBenchRunner(Class<?> testClass) {
         super();
         this.testClass = testClass;
+        methodDescriptions = new HashMap<>();
     }
 
     @Override
     public Description getDescription() {
-        return Description
-                .createTestDescription(testClass, "My runner description");
+        Description description =
+                Description.createSuiteDescription(
+                        testClass.getName(),
+                        testClass.getAnnotations());
+
+        for(Method method : testClass.getMethods()) {
+            Annotation annotation =
+                    method.getAnnotation(Test.class);
+            if(annotation != null) {
+                Description methodDescription =
+                        Description.createTestDescription(
+                                testClass,
+                                method.getName(),
+                                annotation);
+                description.addChild(methodDescription);
+
+                methodDescriptions.put(method, methodDescription);
+            }
+        }
+        return description;
     }
 
     @Override
